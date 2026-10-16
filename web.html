@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Education Test Portal</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #071952, #088395, #35A29F);
+    color: white;
+}
+
+header {
+    text-align: center;
+    padding: 22px 10px;
+    background: #071952;
+}
+
+header h1 {
+    margin: 0 0 8px;
+}
+
+.container {
+    max-width: 650px;
+    margin: 35px auto;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    color: #172554;
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 0 10px 30px #0004;
+}
+
+input {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    margin: 12px 0;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+}
+
+button {
+    background: #088395;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #071952;
+}
+
+.question {
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+label {
+    display: block;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+#testPage, #resultPage {
+    display: none;
+}
+
+.small {
+    font-size: 13px;
+    color: #555;
+}
+
+#message {
+    color: #dc2626;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>📚 Education Test Portal</h1>
+    <p>Learn • Practice • Achieve</p>
+</header>
+
+<div class="container">
+
+    <!-- LOGIN PAGE -->
+    <section class="card" id="loginPage">
+        <h2>🎓 Student Login</h2>
+        <p>Enter your User ID and Password to start the test.</p>
+
+        <form onsubmit="login(event)">
+            <input id="userId" placeholder="Enter User ID" required>
+            <input id="password" type="password"
+                   placeholder="Enter Password" required>
+
+            <button type="submit">Login & Start Test</button>
+        </form>
+
+        <p class="small">
+            Demo login: User ID: student01 | Password: pass123
+        </p>
+        <p id="message"></p>
+    </section>
+
+    <!-- TEST PAGE -->
+    <section class="card" id="testPage">
+        <h2>📝 General Knowledge Test</h2>
+        <p>Choose one answer for each question.</p>
+
+        <form id="quizForm">
+            <div class="question">
+                <b>1. Which language is used to create web page structure?</b>
+                <label><input type="radio" name="q1" value="a" required> Python</label>
+                <label><input type="radio" name="q1" value="b"> HTML</label>
+                <label><input type="radio" name="q1" value="c"> SQL</label>
+            </div>
+
+            <div class="question">
+                <b>2. Which language adds interactivity to a web page?</b>
+                <label><input type="radio" name="q2" value="a" required> JavaScript</label>
+                <label><input type="radio" name="q2" value="b"> HTML only</label>
+                <label><input type="radio" name="q2" value="c"> CSS only</label>
+            </div>
+
+            <div class="question">
+                <b>3. What is the capital of India?</b>
+                <label><input type="radio" name="q3" value="a" required> Mumbai</label>
+                <label><input type="radio" name="q3" value="b"> Chennai</label>
+                <label><input type="radio" name="q3" value="c"> New Delhi</label>
+            </div>
+
+            <div class="question">
+                <b>4. Which device is used to type text?</b>
+                <label><input type="radio" name="q4" value="a" required> Monitor</label>
+                <label><input type="radio" name="q4" value="b"> Keyboard</label>
+                <label><input type="radio" name="q4" value="c"> Speaker</label>
+            </div>
+
+            <div class="question">
+                <b>5. Which one is a programming language?</b>
+                <label><input type="radio" name="q5" value="a" required> Python</label>
+                <label><input type="radio" name="q5" value="b"> Monitor</label>
+                <label><input type="radio" name="q5" value="c"> Mouse</label>
+            </div>
+
+            <button type="submit">Submit Test</button>
+        </form>
+    </section>
+
+    <!-- RESULT PAGE -->
+    <section class="card" id="resultPage">
+        <h2>🏆 Test Result</h2>
+        <h3 id="score"></h3>
+        <p id="feedback"></p>
+        <button onclick="restart()">Back to Login</button>
+    </section>
+
+</div>
+
+<script>
+function login(event) {
+    event.preventDefault();
+
+    const id = document.getElementById("userId").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (id === "student01" && password === "pass123") {
+        document.getElementById("loginPage").style.display = "none";
+        document.getElementById("testPage").style.display = "block";
+    } else {
+        document.getElementById("message").textContent =
+            "Invalid User ID or Password. Please try again.";
+    }
+}
+
+document.getElementById("quizForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const answers = {
+        q1: "b",
+        q2: "a",
+        q3: "c",
+        q4: "b",
+        q5: "a"
+    };
+
+    const formData = new FormData(this);
+    let marks = 0;
+
+    for (const question in answers) {
+        if (formData.get(question) === answers[question]) {
+            marks++;
+        }
+    }
+
+    document.getElementById("testPage").style.display = "none";
+    document.getElementById("resultPage").style.display = "block";
+    document.getElementById("score").textContent =
+        "Your Score: " + marks + " / 5";
+    document.getElementById("feedback").textContent =
+        marks >= 4 ? "Excellent work! Keep learning." :
+        marks >= 3 ? "Good effort! Keep practising." :
+        "Keep practising. You can improve!";
+});
+
+function restart() {
+    document.getElementById("resultPage").style.display = "none";
+    document.getElementById("loginPage").style.display = "block";
+    document.getElementById("quizForm").reset();
+    document.getElementById("message").textContent = "";
+    document.getElementById("userId").value = "";
+    document.getElementById("password").value = "";
+}
+</script>
+
+</body>
+</html>
